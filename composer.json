@@ -1,0 +1,19 @@
+{
+    "name": "marktaborosi/stackoverflow-79606568",
+    "description": "Reacting to Stack Overflow question #79606568: Convert nested configuration array into flat database-like structures (categories, settings, values).",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "Marktaborosi\\Stackoverflow79606568\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mark Taborosi",
+            "email": "mark.taborosi@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "larapack/dd": "^1.1"
+    }
+}

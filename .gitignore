@@ -1,0 +1,30 @@
+# Ignore Composer dependencies
+/vendor/
+
+./idea/*
+
+# Ignore environment and config files
+.env
+*.env.local
+
+# Ignore IDE files
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore output and cache folders
+/processed/
+/*.log
+
+# Ignore PHPStorm or test output
+phpunit.xml
+phpunit.xml.dist
+
+# Ignore OS generated files
+ehthumbs.db
+Icon?
