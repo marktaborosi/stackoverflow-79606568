@@ -89,7 +89,7 @@ function processCategory(
     foreach ($array as $key => $item) {
         if (is_array($item) && isAssoc($item)) {
             if (isset($item['type'])) {
-                // This is a setting, not a category
+                // setting
                 $currentSetId = $setId++;
                 $settingsList[$key] = [
                     'id' => $currentSetId,
