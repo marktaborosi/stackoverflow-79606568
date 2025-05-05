@@ -77,49 +77,49 @@ $order = 1;
  */
 function processCategory(
     array $array,
-    int   $parentId,
+    int $parentId,
     array &$categories,
     array &$settingsList,
     array &$values,
-    int   &$catId,
-    int   &$setId,
-    int   &$valId,
-    int   &$order
-): void
-{
+    int &$catId,
+    int &$setId,
+    int &$valId,
+    int &$order
+): void {
     foreach ($array as $key => $item) {
-        if (is_array($item) && isAssoc($item) && containsSetting($item)) {
-            $currentCatId = $catId++;
-            $categories[$key] = [
-                'id' => $currentCatId,
-                'parent' => $parentId,
-                'name' => $key,
-                'order' => $order++,
-            ];
+        if (is_array($item) && isAssoc($item)) {
+            if (isset($item['type'])) {
+                // This is a setting, not a category
+                $currentSetId = $setId++;
+                $settingsList[$key] = [
+                    'id' => $currentSetId,
+                    'catId' => $parentId,
+                    'name' => $key,
+                    'type' => $item['type'],
+                    'desc' => $item['description'] ?? null,
+                    'readonly' => $item['readonly'] ?? null,
+                    'hidden' => $item['hidden'] ?? null,
+                    'trigger' => $item['trigger'] ?? null,
+                    'order' => $order++,
+                ];
 
-            foreach ($item as $settingKey => $settingData) {
-                if (is_array($settingData) && isAssoc($settingData) && containsSetting($settingData)) {
-                    processCategory([$settingKey => $settingData], $currentCatId, $categories, $settingsList, $values, $catId, $setId, $valId, $order);
-                } else {
-                    $currentSetId = $setId++;
-                    $settingsList[$settingKey] = [
-                        'id' => $currentSetId,
-                        'catId' => $currentCatId,
-                        'name' => $settingKey,
-                        'type' => $settingData['type'] ?? null,
-                        'desc' => $settingData['description'] ?? null,
-                        'readonly' => $settingData['readonly'] ?? null,
-                        'hidden' => $settingData['hidden'] ?? null,
-                        'trigger' => $settingData['trigger'] ?? null,
-                        'order' => $order++,
-                    ];
+                $values[$key] = [
+                    'id' => $valId++,
+                    'setId' => $currentSetId,
+                    'default' => $item['default'] ?? null,
+                ];
+            } else {
+                // This is a category
+                $currentCatId = $catId++;
+                $categories[$key] = [
+                    'id' => $currentCatId,
+                    'parent' => $parentId,
+                    'name' => $key,
+                    'order' => $order++,
+                ];
 
-                    $values[$settingKey] = [
-                        'id' => $valId++,
-                        'setId' => $currentSetId,
-                        'default' => $settingData['default'] ?? null,
-                    ];
-                }
+                // Process child items under this category
+                processCategory($item, $currentCatId, $categories, $settingsList, $values, $catId, $setId, $valId, $order);
             }
         }
     }
@@ -151,8 +151,10 @@ processCategory($settings, 0, $categories, $settingsList, $values, $catId, $setI
 
 // Dumping the results
 echo "--- Categories ---\n";
-dump($categories);
+echo "<pre>";
+print_r($categories);
 echo "--- Settings ---\n";
-dump($settingsList);
+print_r($settingsList);
 echo "--- Values ---\n";
-dump($values);
+print_r($values);
+echo "</pre>";
